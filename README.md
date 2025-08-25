@@ -16,3 +16,14 @@ Crear Like Me, aplicación React con consultas HTTP a un servidor local en el pu
 4. Crear una ruta GET con Express para devolver los registros de una tabla alojada en PostgreSQL. 
 
 5. Crear una ruta POST con Express que reciba y almacene en PostgreSQL un nuevo registro. 
+
+
+
+------
+
+npm install -y
+npm install express
+npm install node
+npm install nodemon
+npm install cors
+npm install pg
