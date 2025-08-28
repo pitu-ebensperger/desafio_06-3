@@ -1,48 +1,42 @@
-const express = require('express') // importo express
-const app = express() // ejecuto express para ob
-const fs = require ('fs') // importo filesystem
-const cors = require('cors') // importo cors
-const path = require('path'); // importo path
+import { getDate, readPosts, addPost, editPost} from './consultas.js' // importo funciones de consultas.js
+import express  from 'express' // importo express
+import fs from 'fs' // importo filesystem
+import cors from 'cors'  // importo cors
+import path from 'path' // importo path
+import { fileURLToPath } from 'url'
 
-const PORT = 3000 // defino puerto 
-app.listen(PORT, function(err){ // levanto servidor
-    if (err) { console.error("Error levantando el servidor"); return; }
-    console.log("Servidor encendido en el puerto", PORT)
-})
 
+const __filename = fileURLToPath(import.meta.url)  //*Para usar ESmodules
+const __dirname  = path.dirname(__filename)
+
+const app = express() 
 app.use(cors()) 
 app.use(express.json()) // uso express.json para recibir datos en formato JSON
 
-const { Pool } = require('pg')
+const PORT = 3000 // defino puerto 
+app.listen(PORT, () => console.log("Servidor encendido"))
 
-const pool = new Pool({
-host: 'localhost',
-user: 'postgres',
-password: 'postgres',
-database: 'likeme',
-allowExitOnIdle: true
-})
+const clientDist = path.join(__dirname, '..', 'frontend', 'dist')
+app.use(express.static(clientDist))
+                            
+app.get(/.*/, (req, res) => {                               
+  res.sendFile(path.join(clientDist, 'index.html'))             
+});   
 
-const getDate = async () => {
-const result = await pool.query("SELECT NOW()")
-console.log(result)
-}
+app.get('/api/posts', async (req, res) => {
+    const posts = await readPosts();
+    res.json(posts);
+});
 
+app.post('/api/post', async (req, res) => {
+    const { titulo, img, descripcion } = req.body;
+    await addPost(titulo, img, descripcion);
+    res.json({ message: 'Post agregado' });
+});
 
-const addPost = async (post, presupuesto) => {
-const consulta = "INSERT INTO posts values (DEFAULT, $1, $2)"
-const values = [id, titulo, img, descripcion, likes]
-const result = await pool.query(consulta, values)
-console.log("post agregado")
-}
-
-
-const getPosts = async () => {
-const { rows } = await pool.query("SELECT * FROM posts")
-console.log(rows)
-return rows
-}
-getPosts()
-
-
-module.exports = { addPost, getPosts }
+app.put('api/posts/:id', async (req, res) => {
+    const { id } = req.params;
+    const {titulo, img, descripcion} = req.body;
+    await editPost(id, titulo, img, descripcion);
+    res.json({ message: 'Post editado' });
+});

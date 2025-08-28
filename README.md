@@ -21,9 +21,3 @@ Crear Like Me, aplicación React con consultas HTTP a un servidor local en el pu
 
 ------
 
-npm install -y
-npm install express
-npm install node
-npm install nodemon
-npm install cors
-npm install pg
