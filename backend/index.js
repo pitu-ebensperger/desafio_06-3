@@ -18,25 +18,42 @@ app.listen(PORT, () => console.log("Servidor encendido"))
 
 const clientDist = path.join(__dirname, '..', 'frontend', 'dist')
 app.use(express.static(clientDist))
+
+
+app.get('/api/posts', async (req, res) => {
+    try {
+         const posts = await readPosts();
+        res.json(posts);
+    } catch (e) {
+        console.error('GET /api/posts error:', e); 
+        res.status(500).json({ error: e.message }); 
+    } 
+});
+
+app.post('/api/posts', async (req, res) => {
+    try{
+        const { titulo, img, descripcion } = req.body;
+        await addPost(titulo, img, descripcion);
+        res.json({ message: 'Post agregado' });
+    } catch (e) {
+        console.error('POST /api/posts error:', e); 
+        res.status(500).json({ error: e.message }); 
+    }
+});
+
+app.put('/api/posts/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const {titulo, img, descripcion} = req.body;
+        await editPost(Number(id), titulo, img, descripcion);
+       res.json({ message: 'Post editado' });
+    } catch (e) {
+        console.error('PUT /api/posts/:id error:', e); 
+        res.status(500).json({ error: e.message }); 
+    }
+});
+
                             
 app.get(/.*/, (req, res) => {                               
   res.sendFile(path.join(clientDist, 'index.html'))             
 });   
-
-app.get('/api/posts', async (req, res) => {
-    const posts = await readPosts();
-    res.json(posts);
-});
-
-app.post('/api/post', async (req, res) => {
-    const { titulo, img, descripcion } = req.body;
-    await addPost(titulo, img, descripcion);
-    res.json({ message: 'Post agregado' });
-});
-
-app.put('api/posts/:id', async (req, res) => {
-    const { id } = req.params;
-    const {titulo, img, descripcion} = req.body;
-    await editPost(id, titulo, img, descripcion);
-    res.json({ message: 'Post editado' });
-});

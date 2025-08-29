@@ -19,16 +19,26 @@ function App() {
   };
 
   const agregarPost = async () => {
-    const post = { titulo, url: imgSrc, descripcion };
-    await axios.post(urlBaseServer + "/posts", post);
-    getPosts();
-  };
+    const post = { titulo, img: imgSrc, descripcion };
+    try {
+        await axios.post(urlBaseServer + "/posts", post);
+        await getPosts(); 
+    } catch (error) {
+        const backendMsg = error.response?.data?.error || error.message; 
+        console.error('Error al agregar post:', backendMsg);             
+        alert('No se pudo crear el post: ' + backendMsg);              
+    }};
 
   // este método se utilizará en el siguiente desafío
   const like = async (id) => {
-    await axios.put(urlBaseServer + `/posts/like/${id}`);
-    getPosts();
-  };
+    try {
+      await axios.put(urlBaseServer + `/posts/like/${id}`);
+      getPosts();
+  } catch (error) {
+        const backendMsg = error.response?.data?.error || error.message; 
+        console.error('Error al agregar post:', backendMsg);             
+        alert('No se pudo crear el post: ' + backendMsg);              
+    }};
 
   // este método se utilizará en el siguiente desafío
   const eliminarPost = async (id) => {
