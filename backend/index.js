@@ -1,6 +1,5 @@
 import { getDate, readPosts, addPost, editPost} from './consultas.js' // importo funciones de consultas.js
 import express  from 'express' // importo express
-import fs from 'fs' // importo filesystem
 import cors from 'cors'  // importo cors
 import path from 'path' // importo path
 import { fileURLToPath } from 'url'
