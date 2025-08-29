@@ -1,13 +1,7 @@
 import { Pool } from 'pg'
+import 'dotenv/config'   
 
-const pool = new Pool({
-host: 'localhost',
-port: 5433,
-user: 'tester',
-password: 'tester',
-database: 'likeme',
-allowExitOnIdle: true
-})
+const pool = new Pool()  
 
 const getDate = async () => {
 const result = await pool.query("SELECT NOW()")
