@@ -28,5 +28,18 @@ const editPost = async (id, titulo, img, descripcion) => {
     console.log('Post editado');
 };
 
+const likePost = async (id) => {
+    const consulta = 'UPDATE posts SET likes = likes + 1 WHERE id=$1';
+    const values = [id];
+    const result = await pool.query(consulta, values);
+    console.log('Post likeado');
+};
 
-export { getDate, readPosts, addPost, editPost }
+const deletePost = async (id) => {
+    const consulta = 'DELETE FROM posts WHERE id=$1';
+    const values = [id];
+    const result = await pool.query(consulta, values);
+    console.log('Post eliminado');
+};
+
+export { getDate, readPosts, addPost, editPost, deletePost, likePost }

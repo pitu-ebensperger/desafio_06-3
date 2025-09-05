@@ -1,4 +1,4 @@
-import { getDate, readPosts, addPost, editPost} from './consultas.js' // importo funciones de consultas.js
+import { readPosts, addPost, editPost,likePost, deletePost} from './consultas.js' // importo funciones de consultas.js
 import express  from 'express' // importo express
 import cors from 'cors'  // importo cors
 import path from 'path' // importo path
@@ -52,7 +52,29 @@ app.put('/api/posts/:id', async (req, res) => {
     }
 });
 
+app.put('/api/posts/like/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        await likePost(Number(id));
+         res.json({ message: 'Post likeado' });
+         } catch (e) {
+            console.error('PUT /api/posts/like/:id error:', e); 
+            res.status(500).json({ error: e.message });
+         }
+});
+
+app.delete('/api/posts/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        await deletePost(id);
+        res.send("Post eliminado");
+    } catch (e) {
+        console.error('DELETE /api/posts/:id error:', e); 
+        res.status(500).json({ error: e.message }); 
+    }
+});
                             
 app.get(/.*/, (req, res) => {                               
   res.sendFile(path.join(clientDist, 'index.html'))             
 });   
+
