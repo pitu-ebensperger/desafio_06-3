@@ -1,4 +1,4 @@
-import { successToast, errorToast } from "./utils/toast";
+import { successToast, errorToast } from "./utils/toast.jsx";
 import { useEffect, useState } from "react";
 
 import {
@@ -17,31 +17,28 @@ export default function App() {
   useEffect(() => {
     getPosts()
       .then((data) => {
-        setPosts((prev) => [...prev, data]);
-        successToast("Post creado correctamente");
+        setPosts(data); 
       })
-      .catch((err) => {
+      .catch(() => {
         errorToast("Error al obtener los posts");
       });
-  }, []);
+  }, []); 
 
-  const createPost = (post) => {
-    addPost(post)
-      .then((data) => {
-        if (data?.id != null) {                        
-          setPosts((prev) => [data, ...prev]);        
-        } else {
-          return getPosts().then((fresh) => setPosts(fresh));
-        }
-      })
-      .then(() => {
-        successToast("Post creado correctamente");    
-      })
-      .catch((err) => {
-        const msg = err?.message || "Error desconocido";
-        errorToast(`Error al crear el post: ${msg}`);
-      });
-  };
+  const createPost = async (post) => {
+  try { 
+    const data = await addPost(post); 
+    if (data?.id != null) { 
+      setPosts((prev) => [data, ...prev]); 
+    } else { 
+      const fresh = await getPosts(); 
+      setPosts(fresh); 
+    } 
+    successToast("Post creado correctamente");
+  } catch (e) { 
+    const msg = e?.message || "Error desconocido"; 
+    errorToast(`Error al crear el post: ${msg}`);
+  } 
+};
 
   const deletePostById = (id) => {
     deletePost(id)
@@ -50,24 +47,22 @@ export default function App() {
       successToast("Post eliminado correctamente");
        })
       .catch(() => {
-        errorToast("Error al eliminar el post"); //*NEW* (missing catch UX)
+        errorToast("Error al eliminar el post");
       });
   };
 
   const likePostById = (id) => {
-    likePost(id).then(() => {
-      const newPosts = posts.map((post) => {
-        if (post.id === id) {
-          return {
-            ...post,
-            likes: post.likes + 1,
-          };
-        }
-        return post;
-      });
-      setPosts(newPosts);
+    likePost(id).then((updated) => {
+      setPosts((prev) =>
+        prev.map((post) =>
+          post.id === id ? updated : post 
+        )
+      );
+    })
+    .catch(() => {
+      errorToast("Error al dar like");
     });
-  };
+};
 
   return (
     <div className="container mt-5">
@@ -77,11 +72,11 @@ export default function App() {
           <div className="card bg-primary text-white">
             <div className="card-body">
               <h2>Add Post</h2>
-              <AddPost createPost={createPost} />
+              <AddPost createPost={createPost} /> 
             </div>
           </div>
         </section>
-       <section className="col-12 col-md-8 mt-5">
+       <section className="col-12 col-md-8 mt-5 gallery">
           {posts.map((post, i) => (
             <CardPost
               key={post?.id ?? `temp-${i}-${post?.titulo ?? 'sin-titulo'}`} //*NEW*

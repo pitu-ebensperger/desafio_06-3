@@ -33,9 +33,9 @@ const editPost = async (id, titulo, img, descripcion) => {
 const likePost = async (id) => {
     const consulta = 'UPDATE posts SET likes = likes + 1 WHERE id=$1 RETURNING *';
     const values = [Number(id)]; 
-    const result = await pool.query(consulta, values);
+    const { rows } = await pool.query(consulta, values);
     console.log('Post likeado');
-return rows[0];
+    return rows[0];
 };
 
 const deletePost = async (id) => {

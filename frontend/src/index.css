@@ -1,3 +1,6 @@
+:root {
+  
+}
 body {
   background: #f1f1f1;
 }
@@ -7,19 +10,38 @@ body {
   background: #0d47a1;
   color: white;
 }
+  
+.card {
+  background: #e1e2e1 !important;
+  border-radius: 10px;
+  border: none !important;
+}
 
+.card-img-top{
+  border-radius: 10px 10px 0 0;
+  aspect-ratio: 4 / 4;   /* try 4/3 or 3/2 if you want taller */
+  overflow: hidden;
+  object-fit: cover; 
+  object-position: top; 
+}
+
+.card-img-top img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;       
+  display: block;
+}
 .card-body {
-  background: #e1e2e1;
+    border-radius: 10px;
+      color: #333;
+
 }
 
 #creado {
   background: #002b55;
 }
 
-.card {
-  background: transparent !important;
-  border: none !important;
-}
+
 
 .fa-solid {
   color: red;
@@ -32,3 +54,38 @@ i {
   font-family: sans-serif;
   text-align: center;
 }
+
+
+
+.btn-icon {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 28px;
+  height: fit-content;
+  
+}
+.btn-icon svg {
+  fill: none;       
+  stroke: #333;  
+}
+.btn-icon svg:hover {
+  stroke: crimson; 
+}
+
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  padding: 20px;
+  padding-top: 0;
+}
+
+.toast-progress-success { background: #16a34a !important; }
+.toast-progress-error   { background: #dc2626 !important; }
+.toast-progress-warning { background: #d9a406 !important; }
+.toast-progress-info    { background: #4f46e5 !important; }
+

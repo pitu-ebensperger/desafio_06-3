@@ -50,11 +50,12 @@ app.put('/api/posts/:id', async (req, res) => {
     } 
 });
 
+
 app.put('/api/posts/like/:id', async (req, res) => {
     try {
         const { id } = req.params;
-        await likePost(Number(id));
-        res.json({ message: 'Post likeado' });
+        const updated = await likePost(Number(id));
+        res.json(updated);
          } catch (e) {
             console.error('PUT /api/posts/like/:id error:', e); 
             res.status(500).json({ error: e.message });

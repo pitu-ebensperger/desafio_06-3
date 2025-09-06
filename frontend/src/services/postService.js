@@ -38,8 +38,9 @@ export const likePost = async (id) => {
     method: "PUT",
   });
    if (!res.ok) { 
-    const msg = `HTTP ${res.status}`;
+    let msg = `HTTP ${res.status}`;
+    try { const maybe = await res.json(); msg = maybe?.error || maybe?.message || msg; } catch {} 
     throw new Error(msg);
   }
-  return true;
+  return await res.json();
 };
